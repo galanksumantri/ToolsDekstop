@@ -1,6 +1,8 @@
 from tkinter import *
 import webbrowser
 from math import factorial
+from tkinter import messagebox
+from Helper import *
 
 BACKGROUND = "lightgrey"
 FONT = 'Arial'
@@ -19,10 +21,10 @@ class HomePage(Frame):
         label = Label(border, text="MY TOOLS", bg = BACKGROUND, font=("Arial Bold", 25))
         label.place(relx=0.5, rely=0.2, anchor=CENTER)
 
-        Window.ButtonPlace(border, 30, 0.5, 0.358, "Factorial Calc", lambda: controller.show_frame(FactorialPage))
-        Window.ButtonPlace(border, 30, 0.5, 0.460, "Divisors Calc", lambda: controller.show_frame(DivisorsPage))
-        Window.ButtonPlace(border, 30, 0.5, 0.563, "Check Major/Minor", lambda: controller.show_frame(MajorMinorPage))
-        Window.ButtonPlace(border, 30, 0.5, 0.666, "About Me", lambda: controller.show_frame(AboutMePage))
+        buttonPlace(border, 30, 0.5, 0.358, "Factorial Calc", lambda: controller.show_frame(FactorialPage))
+        buttonPlace(border, 30, 0.5, 0.460, "Divisors Calc", lambda: controller.show_frame(DivisorsPage))
+        buttonPlace(border, 30, 0.5, 0.563, "Check Major/Minor", lambda: controller.show_frame(MajorMinorPage))
+        buttonPlace(border, 30, 0.5, 0.666, "About Me", lambda: controller.show_frame(AboutMePage))
 
 class FactorialPage(Frame):
     def __init__(self, parent, controller):
@@ -32,9 +34,19 @@ class FactorialPage(Frame):
         INPUT = StringVar()
 
         def onPress():
-            num = int(INPUT.get())       
-            fact = factorial(num)
-            result['text'] = f"The factorial of {num} is {num}! = {fact}"
+            try:
+                if INPUT.get() == "":
+                    messagebox.showerror("Error", "Please fill a number")
+                elif int(INPUT.get()) < 0:
+                    messagebox.showerror("Error", "A number must be large than 0") 
+                elif int(INPUT.get()) > 40:
+                    messagebox.showerror("Error", "The max number is 40")   
+                else:
+                    num = int(INPUT.get())       
+                    fact = factorial(num)
+                    result['text'] = f"The factorial of {num} is {formatRibuan(fact)}"
+            except ValueError:
+                messagebox.showerror("Error", "Only a number are allowed in N")
 
         border = LabelFrame(self, text='Factorial Calc', bg=BACKGROUND, bd = 5, font=(FONT, 20))
         border.pack(fill="both", expand="yes", padx = 250, pady=(140, 200))
@@ -42,14 +54,14 @@ class FactorialPage(Frame):
         inputFrame = Frame(border, bg=BACKGROUND)
         inputFrame.pack(fill="both", expand="yes", padx = 5, pady=5)
 
-        Window.Label("Enter value of integer N", 0.5, 0.4, inputFrame)
-        Window.Input(INPUT, 0.5, 0.5, inputFrame)
+        label("Enter value of integer N (Max 40)", 0.5, 0.4, inputFrame)
+        input(INPUT, 0.5, 0.5, inputFrame)
 
         result = Label(inputFrame, text="Enter a number first!", bg=BACKGROUND, font=(FONT, 15))
         result.place(relx=0.5, rely=0.2, anchor=CENTER)
 
-        Window.ButtonGrid("Validate", 0.5, 0.7, inputFrame, command=onPress)
-        Window.ButtonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
+        buttonPlace(inputFrame, 8, 0.5, 0.7, "Validate", onPress)
+        buttonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
 
 class DivisorsPage(Frame):
     def __init__(self, parent, controller):
@@ -60,11 +72,21 @@ class DivisorsPage(Frame):
 
         def onPress():
             div = []
-            num = int(INPUT.get())
-            for i in range (1, num+1):
-                if (num % i) == 0:
-                    div.append(i)
-            divisors['text'] = f"The divisors of {num} : " + ', '.join(str(x) for x in div)
+            try:
+                if INPUT.get() == "":
+                    messagebox.showerror("Error", "Please fill a number")
+                elif int(INPUT.get()) < 0:
+                    messagebox.showerror("Error", "A number must be large than 0")   
+                elif int(INPUT.get()) > 1000:
+                    messagebox.showerror("Error", "The max number is 1000")   
+                else:
+                    numb = int(INPUT.get())
+                    for i in range(1, numb+1):
+                        if (numb % i) == 0:
+                            div.append(i)
+                    divisors['text'] = f"The divisors of {numb} : " + ', '.join(str(x) for x in div)
+            except ValueError:
+                messagebox.showerror("Error", "Only a number are allowed in N")
 
         border = LabelFrame(self, text='Divisors Calc', bg=BACKGROUND, bd = 5, font=(FONT, 20))
         border.pack(fill="both", expand="yes", padx = 250, pady=(140, 200))
@@ -72,14 +94,14 @@ class DivisorsPage(Frame):
         inputFrame = Frame(border, bg=BACKGROUND)
         inputFrame.pack(fill="both", expand="yes", padx = 5, pady=5)
 
-        Window.Label("Enter the value of N :", 0.5, 0.4, inputFrame)
-        Window.Input(INPUT, 0.5, 0.5, inputFrame)
+        label("Enter the value of N (Max 1000) :", 0.5, 0.4, inputFrame)
+        input(INPUT, 0.5, 0.5, inputFrame)
 
         divisors = Label(inputFrame, text="The divisors of N : none", anchor="w", bg=BACKGROUND, font=(FONT, 15))
         divisors.place(relx=0.5, rely=0.2, anchor=CENTER)
 
-        Window.ButtonGrid("Validate", 0.5, 0.7, inputFrame, onPress)
-        Window.ButtonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
+        buttonPlace(inputFrame, 8, 0.5, 0.7, "Validate", onPress)
+        buttonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
 
 class MajorMinorPage(Frame):
     def __init__(self, parent, controller):
@@ -90,12 +112,21 @@ class MajorMinorPage(Frame):
         INPUT_AGE = StringVar()
 
         def onPress():
-            age = int(INPUT_AGE.get())
-            if age >= 18: 
-                age = "major!"
-            else: 
-                age = "minor!"    
-            result['text'] = f"Welcome: {INPUT_NAME.get()} you are {age}"
+            if INPUT_AGE.get() == "" or INPUT_NAME.get() == "":
+                messagebox.showerror("Error", "Please fill all data")
+            else:
+                try:
+                    age = int(INPUT_AGE.get())
+                    if age < 0:
+                        age = None
+                        messagebox.showerror("Error", "A number must be large than 0")
+                    elif age >= 18: 
+                        age = "major!"
+                    else: 
+                        age = "minor!"    
+                    result['text'] = f"Welcome: {INPUT_NAME.get()} you are {age}"
+                except ValueError:
+                    messagebox.showerror("Error", "Only a number are allowed in age")
 
         border = LabelFrame(self, text="Check Major/Minor", bg=BACKGROUND, bd = 5, font=("Arial", 20))
         border.pack(fill="both", expand="yes", padx = 250, pady=(140, 200))
@@ -103,16 +134,16 @@ class MajorMinorPage(Frame):
         inputFrame = Frame(border, bg=BACKGROUND)
         inputFrame.pack(fill="both", expand="yes", padx = 5, pady=5)
 
-        Window.Label("Enter your name :", 0.37, 0.38, inputFrame)
-        Window.Label("The your age   :", 0.37, 0.48, inputFrame)
-        Window.Input(INPUT_NAME, 0.59, 0.38, inputFrame)
-        Window.Input(INPUT_AGE, 0.59, 0.48, inputFrame)
+        label("Enter your name :", 0.37, 0.38, inputFrame)
+        label("The your age   :", 0.37, 0.48, inputFrame)
+        input(INPUT_NAME, 0.59, 0.38, inputFrame)
+        input(INPUT_AGE, 0.59, 0.48, inputFrame)
 
         result = Label(inputFrame, text="Enter a data first!", bg=BACKGROUND, font=(FONT, 15))
         result.place(relx=0.5, rely=0.2, anchor=CENTER)
 
-        Window.ButtonGrid("Validate", 0.5, 0.7, inputFrame, command=onPress)
-        Window.ButtonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
+        buttonPlace(inputFrame, 8, 0.5, 0.7, "Validate", onPress)
+        buttonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
 
 class AboutMePage(Frame):
     def __init__(self, parent, controller):
@@ -126,9 +157,9 @@ class AboutMePage(Frame):
         label = Label(border, text="Galang Sumantri", bg = BACKGROUND, font=("Arial Bold", 25))
         label.place(relx=0.35, rely=0.45, anchor=CENTER)
 
-        Window.ButtonPlace(border, 8, 0.58, 0.45, "Linkedin", lambda: controller.OpenUrl(urlGalangLinkedin))
-        Window.ButtonPlace(border, 8, 0.7, 0.45, "Instagram", lambda: controller.OpenUrl(urlGalangInstagram))
-        Window.ButtonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
+        buttonPlace(border, 8, 0.58, 0.45, "Linkedin", lambda: controller.OpenUrl(urlGalangLinkedin))
+        buttonPlace(border, 8, 0.7, 0.45, "Instagram", lambda: controller.OpenUrl(urlGalangInstagram))
+        buttonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
 
 class Window(Tk):
     def __init__(self, *args, **kwargs):  
@@ -160,22 +191,6 @@ class Window(Tk):
 
     def OpenUrl(self, url):
         webbrowser.open_new(url)
-
-    def Label(text, x, y, inputFrame):
-        name = Label(inputFrame, text=text, bg=BACKGROUND, font=(FONT, 15))
-        name.place(relx=x, rely=y, anchor=CENTER)
-
-    def Input(INPUT, x, y, inputFrame):
-        entry1 = Entry(inputFrame, text = INPUT, font=(FONT, 13))
-        entry1.place(relx=x, rely=y, anchor=CENTER, height=30, width=200)
-
-    def ButtonGrid(text, x, y, inputFrame, command):
-        button = Button(inputFrame, text=text, font=(FONT, 15), command=command)
-        button.place(relx=x, rely=y, anchor=CENTER)
-
-    def ButtonPlace(border, width, x, y, text, command):
-        button = Button(border, text=text, width=width, font=(FONT, 15), command=command)
-        button.place(relx=x, rely=y, anchor=CENTER)
 
 
 if __name__=="__main__":
