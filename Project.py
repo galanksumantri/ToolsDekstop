@@ -1,13 +1,8 @@
 from tkinter import *
-import webbrowser
 from math import factorial
 from tkinter import messagebox
-from Helper import *
-
-BACKGROUND = "lightgrey"
-FONT = 'Arial'
-urlGalangLinkedin = "https://linkedin.com/in/galangsumantri"
-urlGalangInstagram = "https://www.instagram.com/galanksumantri/"
+from Common.Var import *
+from Common.Utils import *
 
 class HomePage(Frame):
     def __init__(self, parent, controller):
@@ -15,12 +10,10 @@ class HomePage(Frame):
         
         self.configure(bg=BACKGROUND)
 
-        border = LabelFrame(self, text='Home', bg=BACKGROUND, bd = 5, font=(FONT, 20))
+        border = LabelFrame(self, text='Home', bg=BACKGROUND, bd = 5, font=FONT_H2)
         border.pack(fill="both", expand="yes", padx = 250, pady=(140, 200))
 
-        label = Label(border, text="MY TOOLS", bg = BACKGROUND, font=("Arial Bold", 25))
-        label.place(relx=0.5, rely=0.2, anchor=CENTER)
-
+        label("MY TOOLS", 0.5, 0.2, border, FONT_H1)
         buttonPlace(border, 30, 0.5, 0.358, "Factorial Calc", lambda: controller.show_frame(FactorialPage))
         buttonPlace(border, 30, 0.5, 0.460, "Divisors Calc", lambda: controller.show_frame(DivisorsPage))
         buttonPlace(border, 30, 0.5, 0.563, "Check Major/Minor", lambda: controller.show_frame(MajorMinorPage))
@@ -48,20 +41,16 @@ class FactorialPage(Frame):
             except ValueError:
                 messagebox.showerror("Error", "Only a number are allowed in N")
 
-        border = LabelFrame(self, text='Factorial Calc', bg=BACKGROUND, bd = 5, font=(FONT, 20))
+        border = LabelFrame(self, text='Factorial Calc', bg=BACKGROUND, bd = 5, font=FONT_H2)
         border.pack(fill="both", expand="yes", padx = 250, pady=(140, 200))
 
-        inputFrame = Frame(border, bg=BACKGROUND)
-        inputFrame.pack(fill="both", expand="yes", padx = 5, pady=5)
-
-        label("Enter value of integer N (Max 40)", 0.5, 0.4, inputFrame)
-        input(INPUT, 0.5, 0.5, inputFrame)
-
-        result = Label(inputFrame, text="Enter a number first!", bg=BACKGROUND, font=(FONT, 15))
-        result.place(relx=0.5, rely=0.2, anchor=CENTER)
-
-        buttonPlace(inputFrame, 8, 0.5, 0.7, "Validate", onPress)
+        label("Enter value of integer N (Max 40) : ", 0.5, 0.4, border)
+        input(INPUT, 0.5, 0.5, border)
+        buttonPlace(border, 8, 0.5, 0.7, "Validate", onPress)
         buttonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
+
+        result = Label(border, text="Enter a number first!", bg=BACKGROUND, font=FONT_BODY1)
+        result.place(relx=0.5, rely=0.2, anchor=CENTER)
 
 class DivisorsPage(Frame):
     def __init__(self, parent, controller):
@@ -88,20 +77,16 @@ class DivisorsPage(Frame):
             except ValueError:
                 messagebox.showerror("Error", "Only a number are allowed in N")
 
-        border = LabelFrame(self, text='Divisors Calc', bg=BACKGROUND, bd = 5, font=(FONT, 20))
+        border = LabelFrame(self, text='Divisors Calc', bg=BACKGROUND, bd = 5, font=FONT_H2)
         border.pack(fill="both", expand="yes", padx = 250, pady=(140, 200))
 
-        inputFrame = Frame(border, bg=BACKGROUND)
-        inputFrame.pack(fill="both", expand="yes", padx = 5, pady=5)
-
-        label("Enter the value of N (Max 1000) :", 0.5, 0.4, inputFrame)
-        input(INPUT, 0.5, 0.5, inputFrame)
-
-        divisors = Label(inputFrame, text="The divisors of N : none", anchor="w", bg=BACKGROUND, font=(FONT, 15))
-        divisors.place(relx=0.5, rely=0.2, anchor=CENTER)
-
-        buttonPlace(inputFrame, 8, 0.5, 0.7, "Validate", onPress)
+        label("Enter the value of N (Max 1000) :", 0.5, 0.4, border)
+        input(INPUT, 0.5, 0.5, border)
+        buttonPlace(border, 8, 0.5, 0.7, "Validate", onPress)
         buttonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
+
+        divisors = Label(border, text="The divisors of N : none", anchor="w", bg=BACKGROUND, font=FONT_BODY1)
+        divisors.place(relx=0.5, rely=0.2, anchor=CENTER)
 
 class MajorMinorPage(Frame):
     def __init__(self, parent, controller):
@@ -128,22 +113,18 @@ class MajorMinorPage(Frame):
                 except ValueError:
                     messagebox.showerror("Error", "Only a number are allowed in age")
 
-        border = LabelFrame(self, text="Check Major/Minor", bg=BACKGROUND, bd = 5, font=("Arial", 20))
+        border = LabelFrame(self, text="Check Major/Minor", bg=BACKGROUND, bd = 5, font=FONT_H2)
         border.pack(fill="both", expand="yes", padx = 250, pady=(140, 200))
 
-        inputFrame = Frame(border, bg=BACKGROUND)
-        inputFrame.pack(fill="both", expand="yes", padx = 5, pady=5)
-
-        label("Enter your name :", 0.37, 0.38, inputFrame)
-        label("The your age   :", 0.37, 0.48, inputFrame)
-        input(INPUT_NAME, 0.59, 0.38, inputFrame)
-        input(INPUT_AGE, 0.59, 0.48, inputFrame)
-
-        result = Label(inputFrame, text="Enter a data first!", bg=BACKGROUND, font=(FONT, 15))
-        result.place(relx=0.5, rely=0.2, anchor=CENTER)
-
-        buttonPlace(inputFrame, 8, 0.5, 0.7, "Validate", onPress)
+        label("Enter your name :", 0.37, 0.38, border)
+        label("The your age   :", 0.37, 0.48, border)
+        input(INPUT_NAME, 0.59, 0.38, border)
+        input(INPUT_AGE, 0.59, 0.48, border)
+        buttonPlace(border, 8, 0.5, 0.7, "Validate", onPress)
         buttonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
+
+        result = Label(border, text="Enter a data first!", bg=BACKGROUND, font=FONT_BODY1)
+        result.place(relx=0.5, rely=0.2, anchor=CENTER)
 
 class AboutMePage(Frame):
     def __init__(self, parent, controller):
@@ -151,14 +132,14 @@ class AboutMePage(Frame):
 
         self.configure(bg=BACKGROUND)
 
-        border = LabelFrame(self, text='About Me', bg=BACKGROUND, bd = 5, font=(FONT, 20))
+        border = LabelFrame(self, text='About Me', bg=BACKGROUND, bd = 5, font=FONT_H2)
         border.pack(fill="both", expand="yes", padx = 250, pady=(140, 200))
 
-        label = Label(border, text="Galang Sumantri", bg = BACKGROUND, font=("Arial Bold", 25))
+        label = Label(border, text="Galang Sumantri", bg = BACKGROUND, font=FONT_H1)
         label.place(relx=0.35, rely=0.45, anchor=CENTER)
 
-        buttonPlace(border, 8, 0.58, 0.45, "Linkedin", lambda: controller.OpenUrl(urlGalangLinkedin))
-        buttonPlace(border, 8, 0.7, 0.45, "Instagram", lambda: controller.OpenUrl(urlGalangInstagram))
+        buttonPlace(border, 8, 0.58, 0.45, "Linkedin", lambda: OpenUrl(URL1))
+        buttonPlace(border, 8, 0.7, 0.45, "Instagram", lambda: OpenUrl(URL2))
         buttonPlace(border, 5, 0.935, 0.9, "Home", lambda: controller.show_frame(HomePage))
 
 class Window(Tk):
@@ -188,9 +169,6 @@ class Window(Tk):
         frame = self.frames[page]
         frame.tkraise()
         self.title("Application")
-
-    def OpenUrl(self, url):
-        webbrowser.open_new(url)
 
 
 if __name__=="__main__":
